@@ -20,7 +20,8 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppLocker">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".Settings.SettingsActivity"
+            android:label="Settings"/>
         <activity android:name=".PinCodeChange" />
         <activity android:name=".PatternChange" />
         <activity

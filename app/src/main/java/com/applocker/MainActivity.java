@@ -24,6 +24,8 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.applocker.Settings.SettingsActivity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

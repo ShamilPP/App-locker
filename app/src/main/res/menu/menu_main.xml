@@ -1,16 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="MainActivity">
 
     <item
-        android:id="@+id/change"
-        android:title="Change Password" />
+        android:icon="@drawable/settings"
+        android:title=""
+        app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/clear"
-        android:title="Clear locked apps" />
-
-    <item
-        android:id="@+id/exit"
-        android:title="Exit" />
 </menu>

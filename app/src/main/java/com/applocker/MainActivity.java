@@ -156,22 +156,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
 
-        switch (item.getItemId()) {
-            case R.id.change:
-                selectLockTypeDialog(MainActivity.this);
-                return true;
-            case R.id.clear:
-                this.deleteDatabase("Packages.db");
-                finish();
-                return true;
-            case R.id.exit:
-                finish();
+        return super.onOptionsItemSelected(item);
 
-            default:
-                return super.onOptionsItemSelected(item);
 
-        }
     }
 
     void permissionDialog(String message, Intent intent) {

@@ -5,12 +5,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.applocker.R;
-
 import java.util.ArrayList;
+
+import com.applocker.MainActivity;
+import com.applocker.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -31,7 +30,17 @@ public class SettingsActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(SettingsActivity.this, position+" Clicked", Toast.LENGTH_SHORT).show();
+                if(position==0){
+                    //change lock
+                    MainActivity.selectLockTypeDialog(SettingsActivity.this);
+                }else if(position==1){
+                    // delete database
+                    deleteDatabase("Packages.db");
+                    finishAffinity();
+                }else if (position==2){
+                    // exit
+                    finishAffinity();
+                }
             }
         });
     }

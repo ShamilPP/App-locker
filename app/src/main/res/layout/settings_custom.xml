@@ -32,6 +32,16 @@
             android:layout_marginTop="1dp"
             android:text="1"
            />
+
+        <Switch
+            android:id="@+id/custom_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp" />
     </RelativeLayout>
 
 

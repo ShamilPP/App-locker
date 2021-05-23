@@ -1,12 +1,15 @@
 package com.applocker.Settings;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,8 +73,30 @@ public class SettingsAdapter implements ListAdapter {
             convertView = layoutInflater.inflate(R.layout.settings_custom, null);
             TextView title = convertView.findViewById(R.id.custom_title);
             TextView sub = convertView.findViewById(R.id.custom_sub);
+            Switch switchV = convertView.findViewById(R.id.custom_switch);
             title.setText(settingsData.title);
             sub.setText(settingsData.sub);
+            // hide switch
+            PackageManager p = context.getPackageManager();
+            ComponentName componentName = new ComponentName(context, com.applocker.MainActivity.class);
+            boolean switchCurrent = true;
+            if (p.getComponentEnabledSetting(componentName) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+                switchCurrent = false;
+            }
+            if (settingsData.switchValue.equals("true")) {
+                switchV.setVisibility(View.VISIBLE);
+                switchV.setChecked(switchCurrent);
+            }
+            switchV.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                  if(isChecked==true){
+                      p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                  }else{
+                      p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                  }
+                }
+            });
 
         }
         return convertView;

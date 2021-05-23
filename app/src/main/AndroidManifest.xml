@@ -20,7 +20,6 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppLocker">
-        <activity android:name=".SelectChangeLock"></activity>
         <activity android:name=".PinCodeChange" />
         <activity android:name=".PatternChange" />
         <activity

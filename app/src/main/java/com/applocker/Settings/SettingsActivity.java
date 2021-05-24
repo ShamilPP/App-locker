@@ -21,10 +21,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         final ListView list = findViewById(R.id.settings_listview);
         ArrayList<SettingsData> arrayList = new ArrayList<SettingsData>();
-        arrayList.add(new SettingsData("Change Lock", "Select your own lock pattern or pin", "null"));
-        arrayList.add(new SettingsData("Delete all locked apps", "Delete your selected locked apps and app close", "null"));
-        arrayList.add(new SettingsData("Hide App", "Hide or unhide app", "true"));
-        arrayList.add(new SettingsData("Exit", "Exit this app", "null"));
+        arrayList.add(new SettingsData("Change Lock", "Select your own lock pattern or pin"));
+        arrayList.add(new SettingsData("Delete all locked apps", "Delete your selected locked apps and app close"));
+        arrayList.add(new SettingsData("Exit", "Exit this app"));
 
         SettingsAdapter customAdapter = new SettingsAdapter(this, arrayList);
         list.setAdapter(customAdapter);
@@ -39,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
                     // delete database
                     deleteDatabase("Packages.db");
                     finishAffinity();
-                } else if (position == 3) {
+                } else if (position == 2) {
                     // exit
                     finishAffinity();
                 }

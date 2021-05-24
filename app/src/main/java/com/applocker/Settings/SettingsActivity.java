@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         arrayList.add(new SettingsData("Change Lock", "Select your own lock pattern or pin"));
         arrayList.add(new SettingsData("Delete all locked apps", "Delete your selected locked apps and app close"));
         arrayList.add(new SettingsData("Exit", "Exit this app"));
+        arrayList.add(new SettingsData("About", "Created by : Shamil"));
 
         SettingsAdapter customAdapter = new SettingsAdapter(this, arrayList);
         list.setAdapter(customAdapter);
@@ -41,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (position == 2) {
                     // exit
                     finishAffinity();
+                } else if(position ==3){
+                    Toast.makeText(SettingsActivity.this, "Developer : Shamil", Toast.LENGTH_LONG).show();
                 }
             }
         });

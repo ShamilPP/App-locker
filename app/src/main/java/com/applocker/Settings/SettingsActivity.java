@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (position == 0) {
                     //change lock
                     MainActivity.selectLockTypeDialog(SettingsActivity.this);
-                }else if (position == 1) {
+                } else if (position == 1) {
                     // delete database
                     deleteDatabase("Packages.db");
                     finishAffinity();

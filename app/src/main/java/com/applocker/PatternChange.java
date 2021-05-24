@@ -63,9 +63,9 @@ public class PatternChange extends AppCompatActivity {
                 //Save
                 SharedPreferences pref = PatternChange.this.getSharedPreferences("AppLocker", 0);
                 SharedPreferences.Editor editor = pref.edit();
-                if(pref.contains("lock")){
+                if (pref.contains("lock")) {
                     Toast.makeText(this, "Lock Changed", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(this, "Lock added", Toast.LENGTH_SHORT).show();
                 }
                 editor.putString("code", PatternCode);

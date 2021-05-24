@@ -39,6 +39,34 @@ public class MainActivity extends AppCompatActivity {
     DBHelper db;
     private PackageManager packageManager = null;
 
+    public static void selectLockTypeDialog(Context context) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.select_lock_type);
+
+        Button patternButton = dialog.findViewById(R.id.selected_pattern);
+        Button pinButton = dialog.findViewById(R.id.selected_pin);
+        patternButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(context, PatternChange.class);
+                context.startActivity(intent);
+            }
+        });
+        pinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(context, PinCodeChange.class);
+                context.startActivity(intent);
+            }
+        });
+
+        dialog.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -179,34 +206,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.setTitle("PERMISSION DENIED");
         alert.show();
-    }
-
-    public static void selectLockTypeDialog(Context context) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.select_lock_type);
-
-        Button patternButton = dialog.findViewById(R.id.selected_pattern);
-        Button pinButton = dialog.findViewById(R.id.selected_pin);
-        patternButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(context, PatternChange.class);
-                context.startActivity(intent);
-            }
-        });
-        pinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(context, PinCodeChange.class);
-                context.startActivity(intent);
-            }
-        });
-
-        dialog.show();
     }
 
 }

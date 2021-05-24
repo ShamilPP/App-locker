@@ -184,9 +184,9 @@ public class PinCodeChange extends AppCompatActivity {
                         // save
                         SharedPreferences pref = PinCodeChange.this.getSharedPreferences("AppLocker", 0);
                         SharedPreferences.Editor editor = pref.edit();
-                        if(pref.contains("lock")){
+                        if (pref.contains("lock")) {
                             Toast.makeText(PinCodeChange.this, "Lock Changed", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(PinCodeChange.this, "Lock added", Toast.LENGTH_SHORT).show();
                         }
                         editor.putString("code", firstPin);

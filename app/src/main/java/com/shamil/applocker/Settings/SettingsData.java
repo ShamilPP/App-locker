@@ -1,4 +1,4 @@
-package com.applocker.Settings;
+package com.shamil.applocker.Settings;
 
 class SettingsData {
     String title;

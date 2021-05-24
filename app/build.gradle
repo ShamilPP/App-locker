@@ -7,11 +7,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.applocker"
-        minSdkVersion 19
+        applicationId "com.shamil.applocker"
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 3
-        versionName "3.5"
+        versionName "3.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

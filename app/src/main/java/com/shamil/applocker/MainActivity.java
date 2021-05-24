@@ -1,4 +1,4 @@
-package com.applocker;
+package com.shamil.applocker;
 
 import android.app.AlarmManager;
 import android.app.AppOpsManager;
@@ -24,7 +24,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.applocker.Settings.SettingsActivity;
+import com.shamil.applocker.Settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;

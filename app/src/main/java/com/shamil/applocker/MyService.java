@@ -1,4 +1,4 @@
-package com.applocker;
+package com.shamil.applocker;
 
 import android.app.Service;
 import android.app.usage.UsageStats;

@@ -1,4 +1,4 @@
-package com.applocker;
+package com.shamil.applocker;
 
 import android.content.ContentValues;
 import android.content.Context;

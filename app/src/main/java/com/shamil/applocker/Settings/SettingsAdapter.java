@@ -1,4 +1,4 @@
-package com.applocker.Settings;
+package com.shamil.applocker.Settings;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.applocker.R;
+import com.shamil.applocker.R;
 
 import java.util.ArrayList;
 

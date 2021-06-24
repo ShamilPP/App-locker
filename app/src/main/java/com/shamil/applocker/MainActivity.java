@@ -1,9 +1,7 @@
 package com.shamil.applocker;
 
-import android.app.AlarmManager;
 import android.app.AppOpsManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +22,9 @@ import android.widget.ListView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.shamil.applocker.LockScreen.PatternChange;
+import com.shamil.applocker.LockScreen.PinCodeChange;
+import com.shamil.applocker.Service.MyService;
 import com.shamil.applocker.Settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences pref = this.getSharedPreferences("AppLocker", 0);
 
-        if (pref.contains("code") == false) {
+        if (!pref.contains("code")) {
             selectLockTypeDialog(MainActivity.this);
         }
 
@@ -113,13 +114,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        int second = 5;
-
-        Intent intent = new Intent(MainActivity.this, RestartReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,
-                intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + second * 1000, pendingIntent);
+        Intent serviceIntent = new Intent(this, MyService.class);
+        startService(serviceIntent);
 
     }
 

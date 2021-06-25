@@ -1,5 +1,6 @@
 package com.shamil.applocker.Settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -7,9 +8,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.shamil.applocker.MainActivity;
 import com.shamil.applocker.R;
+import com.shamil.applocker.Service.MyService;
 
 import java.util.ArrayList;
 
@@ -48,5 +51,11 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent serviceIntent = new Intent(this, MyService.class);
+        ContextCompat.startForegroundService(this,serviceIntent);
     }
 }

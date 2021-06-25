@@ -39,12 +39,12 @@
 
         <service android:name=".Service.MyService" />
 
-        <receiver android:name=".BootCompleted">
+        <receiver android:name=".Receiver.BootCompleted">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
+    <receiver android:name=".Receiver.ServiceChecker" />
     </application>
 
 </manifest>

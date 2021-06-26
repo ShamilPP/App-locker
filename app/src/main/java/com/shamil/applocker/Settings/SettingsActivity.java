@@ -56,6 +56,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Intent serviceIntent = new Intent(this, MyService.class);
-        ContextCompat.startForegroundService(this,serviceIntent);
+        startService(serviceIntent);
     }
 }

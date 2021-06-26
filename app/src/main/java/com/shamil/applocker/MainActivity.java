@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Intent serviceIntent = new Intent(this, MyService.class);
-        ContextCompat.startForegroundService(this,serviceIntent);
+        startService(serviceIntent);
 
         int second = 5;
 
@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
                 i, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + second * 1000, pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + second * 1000, pendingIntent);
+        }
 
 
     }
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Intent serviceIntent = new Intent(this, MyService.class);
-        ContextCompat.startForegroundService(this,serviceIntent);
+        startService(serviceIntent);
     }
 
     private List<AppAdapter> checkForLaunchIntent(List<ApplicationInfo> list) {

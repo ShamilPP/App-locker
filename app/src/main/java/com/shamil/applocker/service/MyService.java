@@ -1,7 +1,5 @@
 package com.shamil.applocker.Service;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -12,14 +10,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
-
 import com.shamil.applocker.DBHelper;
 import com.shamil.applocker.LockScreen.PatternLockScreen;
 import com.shamil.applocker.LockScreen.PinCodeLockScreen;
-import com.shamil.applocker.MainActivity;
-import com.shamil.applocker.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +51,7 @@ public class MyService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Intent serviceIntent = new Intent(context, MyService.class);
-        ContextCompat.startForegroundService(context, serviceIntent);
+        startService(serviceIntent);
         super.onTaskRemoved(rootIntent);
     }
 
@@ -70,26 +63,12 @@ public class MyService extends Service {
         pass = pref.getString("code", "");
         passType = pref.getString("type", "");
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_ID)
-                .setContentTitle("App Lock")
-                .setContentText("App Lock service started")
-                .setSmallIcon(R.drawable.icon)
-                .setContentIntent(pendingIntent)
-                .build();
-
-        startForeground(1, notification);
-
         return START_STICKY;
     }
-
     @Override
     public void onDestroy() {
         Intent serviceIntent = new Intent(this, MyService.class);
-        ContextCompat.startForegroundService(context, serviceIntent);
+        startService( serviceIntent);
         super.onDestroy();
     }
 
@@ -110,7 +89,7 @@ public class MyService extends Service {
                     topActivity = stats.get(j).getPackageName();
                 }
                 if (secondApp.equals(context.getPackageName()) || secondApp.equals(topActivity)) {
-                } else {
+                }else{
                     for (String currentPackage : dbPackage) {
                         if (topActivity.equals(currentPackage)) {
                             if (!pass.equals("")) {

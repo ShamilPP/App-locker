@@ -5,8 +5,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.core.content.ContextCompat;
+import android.os.Build;
+import android.widget.Toast;
 
 import com.shamil.applocker.Service.MyService;
 
@@ -14,15 +14,17 @@ public class ServiceChecker extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent serviceIntent = new Intent(context, MyService.class);
-        ContextCompat.startForegroundService(context, serviceIntent);
+        context.startService(serviceIntent);
 
-        int second = 600;
+        int second = 50;
 
         Intent i = new Intent(context, ServiceChecker.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 i, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + second * 1000, pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + second * 1000, pendingIntent);
+        }
 
     }
 }

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,66 +48,16 @@ public class PinCodeChange extends AppCompatActivity {
         button0 = findViewById(R.id.button0);
 
         textView.setText("Enter new Password");
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("1");
-            }
-        });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("2");
-            }
-        });
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("3");
-            }
-        });
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("4");
-            }
-        });
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("5");
-            }
-        });
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("6");
-            }
-        });
-        button7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("7");
-            }
-        });
-        button8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("8");
-            }
-        });
-        button9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("9");
-            }
-        });
-        button0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonClick("0");
-            }
-        });
+        button1.setOnClickListener(v -> buttonClick("1"));
+        button2.setOnClickListener(v -> buttonClick("2"));
+        button3.setOnClickListener(v -> buttonClick("3"));
+        button4.setOnClickListener(v -> buttonClick("4"));
+        button5.setOnClickListener(v -> buttonClick("5"));
+        button6.setOnClickListener(v -> buttonClick("6"));
+        button7.setOnClickListener(v -> buttonClick("7"));
+        button8.setOnClickListener(v -> buttonClick("8"));
+        button9.setOnClickListener(v -> buttonClick("9"));
+        button0.setOnClickListener(v -> buttonClick("0"));
     }
 
     void buttonClick(String number) {
@@ -149,7 +98,7 @@ public class PinCodeChange extends AppCompatActivity {
     }
 
     private void change(String pinCode) {
-        if (ifNewEnter == true) {
+        if (ifNewEnter) {
             firstPin = pinCode;
             imageView1.setImageResource(R.drawable.green_filled);
             imageView2.setImageResource(R.drawable.green_filled);

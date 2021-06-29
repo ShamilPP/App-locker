@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Vibrator;
@@ -35,6 +36,10 @@ public class PatternLockScreen {
         dialog = new Dialog(context, R.style.Theme_AppLocker);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptsView = layoutInflater.inflate(R.layout.pattern_lock_screen, null, false);
+
+        Window window = dialog.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.BLACK);
 
         imageView = promptsView.findViewById(R.id.app_icon_locked);
 

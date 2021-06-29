@@ -1,22 +1,33 @@
-package com.shamil.applocker.Receiver;
+package com.shamil.applocker.Service;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.widget.Toast;
 
-import com.shamil.applocker.Service.MyService;
+import androidx.core.content.ContextCompat;
 
 public class ServiceChecker extends BroadcastReceiver {
+    private static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, MyService.class);
-        context.startService(serviceIntent);
 
-        int second = 50;
+        if (!isMyServiceRunning(context, MyAccessibilityService.class)) {
+            ContextCompat.startForegroundService(context, new Intent(context, MyAccessibilityService.class));
+        }
+        int second = 600;
 
         Intent i = new Intent(context, ServiceChecker.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,

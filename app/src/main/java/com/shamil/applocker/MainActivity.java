@@ -1,9 +1,9 @@
 package com.shamil.applocker;
 
 import android.app.AlarmManager;
-import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +24,13 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.shamil.applocker.LockScreen.PatternChange;
+import com.shamil.applocker.LockScreen.PatternLockScreen;
 import com.shamil.applocker.LockScreen.PinCodeChange;
-import com.shamil.applocker.Receiver.ServiceChecker;
-import com.shamil.applocker.Service.MyService;
+import com.shamil.applocker.LockScreen.PinCodeLockScreen;
+import com.shamil.applocker.Service.MyAccessibilityService;
+import com.shamil.applocker.Service.ServiceChecker;
 import com.shamil.applocker.Settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -42,21 +44,60 @@ public class MainActivity extends AppCompatActivity {
     MyListAdapter listAdapter = null;
     ListView listview;
     DBHelper db;
-    private PackageManager packageManager = null;
+    public static String pass;
+    public static String passType;
+    public static ArrayList<String> dbPackage;
+    PackageManager packageManager = null;
+
+    public static void updateData(Context context) {
+        DBHelper db = new DBHelper(context);
+        dbPackage = db.getAllPackage();
+        SharedPreferences pref = context.getSharedPreferences("AppLocker", 0);
+        pass = pref.getString("code", "");
+        passType = pref.getString("type", "");
+    }
+
+    public static boolean isAccessibilityServiceEnabled(Context context, Class<?> accessibilityService) {
+        ComponentName expectedComponentName = new ComponentName(context, accessibilityService);
+
+        String enabledServicesSetting = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        if (enabledServicesSetting == null)
+            return false;
+
+        TextUtils.SimpleStringSplitter colonSplitter = new TextUtils.SimpleStringSplitter(':');
+        colonSplitter.setString(enabledServicesSetting);
+
+        while (colonSplitter.hasNext()) {
+            String componentNameString = colonSplitter.next();
+            ComponentName enabledService = ComponentName.unflattenFromString(componentNameString);
+
+            if (enabledService != null && enabledService.equals(expectedComponentName))
+                return true;
+        }
+
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences pref = this.getSharedPreferences("AppLocker", 0);
+        SharedPreferences pref = getSharedPreferences("AppLocker", 0);
+        permissionCheck();
+        updateData(this);
+        db = new DBHelper(this);
 
         if (!pref.contains("code")) {
             selectLockTypeDialog(MainActivity.this);
+        } else {
+            if (passType.equals("pin")) {
+                PinCodeLockScreen.PinCodeLockScreen(this, getPackageName());
+            } else {
+                PatternLockScreen.PatternLockScreen(this, getPackageName());
+            }
         }
 
-        permissionCheck();
-        db = new DBHelper(this);
         packageManager = getPackageManager();
         appList = checkForLaunchIntent(packageManager.getInstalledApplications(PackageManager.GET_META_DATA));
         Collections.sort(appList, new Comparator<AppAdapter>() {
@@ -83,11 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 listAdapter.notifyDataSetChanged();
             }
         });
-
-        Intent serviceIntent = new Intent(this, MyService.class);
-        startService(serviceIntent);
-
-        int second = 5;
+        int second = 2;
 
         Intent i = new Intent(this, ServiceChecker.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
@@ -96,15 +133,6 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + second * 1000, pendingIntent);
         }
-
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Intent serviceIntent = new Intent(this, MyService.class);
-        startService(serviceIntent);
     }
 
     private List<AppAdapter> checkForLaunchIntent(List<ApplicationInfo> list) {
@@ -128,35 +156,10 @@ public class MainActivity extends AppCompatActivity {
         return application;
     }
 
-    void permissionCheck() {
-
-        // Usage State Permission
-        boolean granted = false;
-        AppOpsManager appOps = (AppOpsManager) MainActivity.this
-                .getSystemService(Context.APP_OPS_SERVICE);
-        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(), MainActivity.this.getPackageName());
-
-        if (mode == AppOpsManager.MODE_DEFAULT) {
-            granted = (MainActivity.this.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
-        } else {
-            granted = (mode == AppOpsManager.MODE_ALLOWED);
-        }
-        if (granted == false) {
-            Intent usageStatePermission = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            permissionDialog("GRANT USAGE STATE PERMISSION", usageStatePermission);
-        }
-
-        // Display Overlay Permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean drawOverlays = Settings.canDrawOverlays(this);
-            if (drawOverlays == false) {
-                Intent displayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                permissionDialog("GRANT DISPLAY OVERLAY PERMISSION", displayIntent);
-
-            }
-        }
-
+    @Override
+    protected void onStop() {
+        updateData(this);
+        super.onStop();
     }
 
     @Override
@@ -219,5 +222,23 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    void permissionCheck() {
 
+        // Accessibility Permission
+        if (!isAccessibilityServiceEnabled(this, MyAccessibilityService.class)) {
+            Intent accessibilityIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            permissionDialog("GRANT ACCESSIBILITY PERMISSION", accessibilityIntent);
+        }
+
+        // Display Overlay Permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            boolean drawOverlays = Settings.canDrawOverlays(this);
+            if (!drawOverlays) {
+                Intent displayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                permissionDialog("GRANT DISPLAY OVERLAY PERMISSION", displayIntent);
+
+            }
+        }
+
+    }
 }

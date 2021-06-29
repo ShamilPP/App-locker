@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -91,10 +93,16 @@ public class MainActivity extends AppCompatActivity {
         if (!pref.contains("code")) {
             selectLockTypeDialog(MainActivity.this);
         } else {
-            if (passType.equals("pin")) {
-                PinCodeLockScreen.PinCodeLockScreen(this, getPackageName());
-            } else {
-                PatternLockScreen.PatternLockScreen(this, getPackageName());
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                boolean drawOverlays = Settings.canDrawOverlays(this);
+
+                if (drawOverlays) {
+                    if (passType.equals("pin")) {
+                        PinCodeLockScreen.PinCodeLockScreen(this, getPackageName());
+                    } else {
+                        PatternLockScreen.PatternLockScreen(this, getPackageName());
+                    }
+                }
             }
         }
 
@@ -186,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("OPEN SETTINGS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
                         startActivity(intent);
                     }
                 });
@@ -224,21 +233,30 @@ public class MainActivity extends AppCompatActivity {
 
     void permissionCheck() {
 
-        // Accessibility Permission
-        if (!isAccessibilityServiceEnabled(this, MyAccessibilityService.class)) {
-            Intent accessibilityIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            permissionDialog("GRANT ACCESSIBILITY PERMISSION", accessibilityIntent);
-        }
-
         // Display Overlay Permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean drawOverlays = Settings.canDrawOverlays(this);
             if (!drawOverlays) {
                 Intent displayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                 permissionDialog("GRANT DISPLAY OVERLAY PERMISSION", displayIntent);
-
             }
         }
 
+        // Accessibility Permission
+        if (!isAccessibilityServiceEnabled(this, MyAccessibilityService.class)) {
+            Intent accessibilityIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            permissionDialog("GRANT ACCESSIBILITY PERMISSION", accessibilityIntent);
+        }
+
+        Intent intent = new Intent();
+        String packageName = getPackageName();
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
     }
 }

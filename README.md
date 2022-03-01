@@ -1,0 +1,3 @@
+# App-locker
+
+App Locker is a phone app that prevents people from accessing certain apps on their phone. This is an app that would be useful for people who want to hide their messages from their significant other, for example. There are many different types of apps that people might want to lock away from prying eyes, and App Locker can do it all. People can lock up all of their apps, or just certain ones. App Locker also offers password protection and the ability to hide the app itself. There are even settings that allow people to lock their apps while they're still in the app, or lock the app after they exit it. App Locker is a useful app for people who want to keep their private information private.
